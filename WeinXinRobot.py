@@ -111,6 +111,12 @@ def tofilehelper_msg(msg):
         print("设置为状态：" + str(replyToChat))
         itchat.send('已启动', 'filehelper')
         return replyToChat
+    
+    # 查询 19460
+    if "查询" in msg['Text']:
+        carid=msg['Text'][-5:]
+        BaseInfo(carid)
+        return
 
 
 
@@ -147,6 +153,24 @@ def Osc_Topic():
         itchat.send(title.text + '\n' + title.get('href'), 'filehelper')
         return
     return
+
+def GetInfo(carid):
+    url = "https://www.chejianding.com/buycar/cfg/" + str(carid) + ".htm"
+    r=requests.get(url)
+    #print(r.text)
+    return r.text
+
+def BaseInfo(carid):
+    text = GetInfo(carid)
+    soup = BeautifulSoup(text, 'html.parser')
+    info = soup.select('div tr')
+    arr=[]
+    for i in info:
+        arr.append(i.text)
+    args="".join(arr)
+    itchat.send(args,'filehelper')
+    return
+
 
 
 # hotReload=True
